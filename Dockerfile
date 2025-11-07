@@ -2,10 +2,9 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-# Copiamos csproj y resto (optimiza cache)
-COPY *.sln ./
+# Copiamos csproj y restauramos dependencias
 COPY ApiRestDespliegue/*.csproj ApiRestDespliegue/
-RUN dotnet restore
+RUN dotnet restore ApiRestDespliegue/ApiRestDespliegue.csproj
 
 # Copiamos todo y publicamos
 COPY . .
@@ -18,7 +17,7 @@ WORKDIR /app
 # Copiamos los artefactos publicados
 COPY --from=build /app ./
 
-# Permitir que Kestrel escuche en el puerto interno 10000
+# Permitir que Kestrel escuche en el puerto interno 10000 (Render lo re-mapeará)
 ENV ASPNETCORE_URLS=http://0.0.0.0:10000
 EXPOSE 10000
 
