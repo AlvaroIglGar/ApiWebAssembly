@@ -76,7 +76,7 @@ namespace ApiRestDespliegue
                 app.MapOpenApi();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseCors("AllowAll");
 
