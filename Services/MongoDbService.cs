@@ -1,4 +1,5 @@
 ﻿using ApiRestDespliegue.Models.Login;
+using ApiRestDespliegue.Models.Pajaros;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -25,6 +26,8 @@ namespace ApiRestDespliegue.Services
 
         public IMongoCollection<User> Users =>
             _database.GetCollection<User>("Users");
+        public IMongoCollection<Pajaro> Pajaros => _database.GetCollection<Pajaro>("Pajaros");
+        public IMongoCollection<HistoricoPajaro> HistoricoPajaros => _database.GetCollection<HistoricoPajaro>("Pajaros_Historico");
     }
 
     public class MongoDbSettings

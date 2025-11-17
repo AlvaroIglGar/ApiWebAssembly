@@ -3,7 +3,7 @@
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>C:\Users\Alvaro\source\repos\ApiRestDespliegue\ApiRestDespliegue\bin\Release\net9.0\publish\</_PublishTargetUrl>
-    <History>True|2025-11-07T20:08:06.8749535Z||;</History>
+    <History>True|2025-11-17T14:20:09.9682377Z||;True|2025-11-07T21:08:06.8749535+01:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>

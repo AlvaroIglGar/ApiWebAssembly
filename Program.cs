@@ -1,6 +1,8 @@
 ﻿
 using ApiRestDespliegue.Interfaces;
+using ApiRestDespliegue.Interfaces.Pajaros;
 using ApiRestDespliegue.Services;
+using ApiRestDespliegue.Services.Pajaros;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -33,12 +35,15 @@ namespace ApiRestDespliegue
 
 
             builder.Services.AddSingleton<MongoDbService>();
+            builder.Services.AddSingleton<IMongoHistoricoPajaroRepositoryService, MongoHistoricoPajaroRepositoryService>();
+            builder.Services.AddSingleton<IMongoPajaroRepositoryService, MongoPajaroRepositoryService>();
 
             // Registrar IUserRepository según configuración
             var useInMemory = builder.Configuration.GetValue<bool>("UseInMemoryRepository");
             if (useInMemory)
             {
                 builder.Services.AddSingleton<IUserRepository, InMemoryUserRepository>();
+           
             }
             else
             {
