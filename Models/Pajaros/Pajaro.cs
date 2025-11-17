@@ -15,6 +15,9 @@
         public string Alimentacion { get; set; }
         public string Descripcion { get; set; }
 
+        [BsonRepresentation(BsonType.Double)]
+        public double CantidadComida { get; set; }
+
         [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime FechaCreacion { get; set; }
 

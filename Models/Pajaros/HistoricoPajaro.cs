@@ -15,7 +15,10 @@
         public string PajaroId { get; set; }
 
         [BsonRepresentation(BsonType.Double)]
-        public double Peso { get; set; }
+        public double PesoAntesVuelo { get; set; }
+
+        [BsonRepresentation(BsonType.Double)]
+        public double PesoDespuesVuelo { get; set; }
 
         public string MomentoDelDia { get; set; }
 
