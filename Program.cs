@@ -30,8 +30,21 @@ namespace ApiRestDespliegue
                         .AllowAnyMethod());
             });
 
-            builder.Services.Configure<MongoDbSettings>(
-    builder.Configuration.GetSection("MongoDbSettings"));
+            //        builder.Services.Configure<MongoDbSettings>(
+            //builder.Configuration.GetSection("MongoDbSettings"));
+
+            // 🔹 MongoDbSettings desde variables de entorno
+            var mongoSettings = new MongoDbSettings
+            {
+                ConnectionString = Environment.GetEnvironmentVariable("MONGO_URI")
+                    ?? "",
+                DatabaseName = Environment.GetEnvironmentVariable("MONGO_DB_NAME") ?? "AppPruebasDB",
+                UsersCollectionName = Environment.GetEnvironmentVariable("MONGO_USERS_COLLECTION") ?? "Users"
+            };
+
+            // 🔹 Registrar MongoDbSettings y MongoDbService
+            builder.Services.AddSingleton(mongoSettings);
+            builder.Services.AddSingleton<MongoDbService>();
 
 
             builder.Services.AddSingleton<MongoDbService>();

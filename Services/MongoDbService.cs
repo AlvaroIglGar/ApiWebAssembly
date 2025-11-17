@@ -32,8 +32,13 @@ namespace ApiRestDespliegue.Services
 
     public class MongoDbSettings
     {
-        public string ConnectionString { get; set; } = string.Empty;
-        public string DatabaseName { get; set; } = string.Empty;
-        public string UsersCollectionName { get; set; } = string.Empty;
+        public string ConnectionString { get; set; } =
+         Environment.GetEnvironmentVariable("MONGO_URI") ?? "";
+
+        public string DatabaseName { get; set; } =
+            Environment.GetEnvironmentVariable("MONGO_DB_NAME") ?? "AppPruebasDB";
+
+        public string UsersCollectionName { get; set; } =
+            Environment.GetEnvironmentVariable("MONGO_USERS_COLLECTION") ?? "Users";
     }
 }
