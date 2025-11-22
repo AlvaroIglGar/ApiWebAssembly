@@ -29,6 +29,7 @@ namespace ApiRestDespliegue.Services
         public IMongoCollection<Pajaro> Pajaros => _database.GetCollection<Pajaro>("Pajaros");
         public IMongoCollection<HistoricoPajaro> HistoricoPajaros => _database.GetCollection<HistoricoPajaro>("Pajaros_Historico");
         public IMongoCollection<TipoComida> TipoComida => _database.GetCollection<TipoComida>("TipoComida");
+        public IMongoCollection<Actividad> Actividad => _database.GetCollection<Actividad>("Actividad");
     }
 
     public class MongoDbSettings

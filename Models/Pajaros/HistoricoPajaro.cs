@@ -14,6 +14,10 @@
         [BsonRepresentation(BsonType.ObjectId)]
         public string PajaroId { get; set; }
 
+        // Referencia a la actividad
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string ActividadId { get; set; }
+
         public string MomentoDelDia { get; set; }
 
         [BsonRepresentation(BsonType.Double)]
