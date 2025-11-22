@@ -50,6 +50,8 @@ namespace ApiRestDespliegue
             builder.Services.AddSingleton<MongoDbService>();
             builder.Services.AddSingleton<IMongoHistoricoPajaroRepositoryService, MongoHistoricoPajaroRepositoryService>();
             builder.Services.AddSingleton<IMongoPajaroRepositoryService, MongoPajaroRepositoryService>();
+            builder.Services.AddScoped<IMongoTipoComidaRepositoryService, MongoTipoComidaRepositoryService>();
+
 
             // Registrar IUserRepository según configuración
             var useInMemory = builder.Configuration.GetValue<bool>("UseInMemoryRepository");
