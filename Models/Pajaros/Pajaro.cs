@@ -7,7 +7,7 @@
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         public string Nombre { get; set; }
         public string Especie { get; set; }

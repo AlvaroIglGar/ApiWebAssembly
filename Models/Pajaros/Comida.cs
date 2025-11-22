@@ -6,7 +6,7 @@ namespace ApiRestDespliegue.Models.Pajaros
     public class Comida
     {
         [BsonRepresentation(BsonType.ObjectId)]
-        public string TipoId { get; set; }
+        public string? TipoId { get; set; }
 
         public string TipoNombre { get; set; } = string.Empty;
 
