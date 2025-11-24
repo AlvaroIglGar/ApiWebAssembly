@@ -14,24 +14,28 @@ namespace ApiRestDespliegue
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Render usa un puerto dinámico -> PORT
+            // 🔹 Render usa un puerto dinámico → debemos enlazarlo
             var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
             builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
-            // Add services to the container.
+            // 🔹 Controllers
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
 
+            // 🔹 Política CORS universal (Render-friendly)
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll",
-                    policy => policy
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy
                         .AllowAnyOrigin()
+                        .AllowAnyMethod()
                         .AllowAnyHeader()
-                        .AllowAnyMethod());
+                        .WithExposedHeaders("*");
+                });
             });
 
-            // Mongo settings desde entorno
+            // 🔹 MongoDB config
             var mongoSettings = new MongoDbSettings
             {
                 ConnectionString = Environment.GetEnvironmentVariable("MONGO_URI") ?? "",
@@ -47,16 +51,14 @@ namespace ApiRestDespliegue
             builder.Services.AddScoped<IMongoTipoComidaRepositoryService, MongoTipoComidaRepositoryService>();
             builder.Services.AddScoped<IMongoActividadRepositoryService, MongoActividadRepositoryService>();
 
+            // 🔹 Repositorio Users
             var useInMemory = builder.Configuration.GetValue<bool>("UseInMemoryRepository");
             if (useInMemory)
-            {
                 builder.Services.AddSingleton<IUserRepository, InMemoryUserRepository>();
-            }
             else
-            {
                 builder.Services.AddSingleton<IUserRepository, MongoUserRepository>();
-            }
 
+            // 🔹 JWT
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -72,20 +74,40 @@ namespace ApiRestDespliegue
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = builder.Configuration["Jwt:Issuer"],
                     ValidAudience = builder.Configuration["Jwt:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
                 };
             });
 
             var app = builder.Build();
 
+            // 🔹 OpenAPI solo en Development
             if (app.Environment.IsDevelopment())
-            {
                 app.MapOpenApi();
-            }
 
+            // 🔥 Middleware para forzar CORS MANUALMENTE (Render a veces bloquea OPTIONS)
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Append("Access-Control-Allow-Origin", "*");
+                context.Response.Headers.Append("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+                context.Response.Headers.Append("Access-Control-Allow-Headers", "*");
+
+                // Responder preflight sin pasar al pipeline
+                if (context.Request.Method == "OPTIONS")
+                {
+                    context.Response.StatusCode = 200;
+                    return;
+                }
+
+                await next();
+            });
+
+            // 🔹 Aplicar política CORS
             app.UseCors("AllowAll");
+
             app.UseAuthentication();
             app.UseAuthorization();
+
             app.MapControllers();
 
             app.Run();
