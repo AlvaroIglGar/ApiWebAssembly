@@ -1,26 +1,23 @@
-# Etapa de build con SDK (compila y publica)
+# Build stage
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-# Copiamos el proyecto y restauramos dependencias
 COPY *.sln ./
 COPY *.csproj ./
 RUN dotnet restore
 
-# Copiamos todo el código y publicamos
 COPY . .
 RUN dotnet publish -c Release -o /app --no-restore
 
-# Etapa runtime con imagen ligera
+# Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
 
-# Copiamos los artefactos publicados
 COPY --from=build /app ./
 
-# Permitir que Kestrel escuche en el puerto interno 10000
-ENV ASPNETCORE_URLS=http://0.0.0.0:10000
-EXPOSE 10000
+# Render asigna su propio puerto en $PORT
+ENV ASPNETCORE_URLS=http://0.0.0.0:${PORT}
 
-# Comando para arrancar tu API
+EXPOSE 8080
+
 ENTRYPOINT ["dotnet", "ApiRestDespliegue.dll"]
